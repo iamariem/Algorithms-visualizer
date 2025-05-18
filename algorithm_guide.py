@@ -88,13 +88,47 @@ def binary_search_explanation():
     """
     explanation_label.config(text=explanation)
 
+# === Heap Sort Explanation ===
+def heap_sort_explanation():
+    explanation = """
+    Heap Sort Algorithm:
+
+    1. Build a max heap from the input data.
+    2. Swap the root (max value) with the last element of the heap.
+    3. Restore the heap property for the reduced heap.
+    4. Repeat the process until the heap is empty.
+
+    Time Complexity:
+    - Best Case: O(n log n)
+    - Worst Case: O(n log n)
+    - Average Case: O(n log n)
+    """
+    explanation_label.config(text=explanation)
+
+# === Linear Search Explanation ===
+def linear_search_explanation():
+    explanation = """
+    Linear Search Algorithm:
+
+    1. Start from the first element and compare it with the target.
+    2. If it matches, return the index.
+    3. If it does not match, continue with the next element.
+    4. Repeat until the target is found or the list ends.
+
+    Time Complexity:
+    - Best Case: O(1)
+    - Worst Case: O(n)
+    - Average Case: O(n)
+    """
+    explanation_label.config(text=explanation)
+
 # === GUI Setup ===
 window = tk.Tk()
 window.title("Algorithm Guide")
 window.geometry("800x600")
 window.config(bg="#1e1e2f")
 
-# Explanation Button
+# Explanation Button for different algorithms
 bubble_sort_button = tk.Button(window, text="Show Bubble Sort Explanation", command=bubble_sort_explanation,
                                bg="#00b894", fg="white", font=("Segoe UI", 12, "bold"), bd=0)
 bubble_sort_button.pack(pady=10)
@@ -115,8 +149,17 @@ binary_search_button = tk.Button(window, text="Show Binary Search Explanation", 
                                  bg="#f39c12", fg="white", font=("Segoe UI", 12, "bold"), bd=0)
 binary_search_button.pack(pady=10)
 
+heap_sort_button = tk.Button(window, text="Show Heap Sort Explanation", command=heap_sort_explanation,
+                             bg="#9b59b6", fg="white", font=("Segoe UI", 12, "bold"), bd=0)
+heap_sort_button.pack(pady=10)
+
+linear_search_button = tk.Button(window, text="Show Linear Search Explanation", command=linear_search_explanation,
+                                 bg="#34495e", fg="white", font=("Segoe UI", 12, "bold"), bd=0)
+linear_search_button.pack(pady=10)
+
 # Explanation Label
 explanation_label = tk.Label(window, text="", fg="white", bg="#1e1e2f", font=("Segoe UI", 12))
 explanation_label.pack(pady=20)
 
 window.mainloop()
+
