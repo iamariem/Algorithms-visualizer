@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 import random
 import time
 import matplotlib.pyplot as plt

@@ -42,7 +42,8 @@ def bubble_sort(data):
     start = time.time()
     for i in range(n):
         for j in range(n - i - 1):
-            if stop_flag: return
+            if stop_flag:
+                return
             comparisons += 1
             draw_bars(data, ["#f39c12" if x == j or x == j+1 else "#bdc3c7" for x in range(n)])
             if data[j] > data[j + 1]:
@@ -61,7 +62,8 @@ def insertion_sort(data):
         key = data[i]
         j = i - 1
         while j >= 0 and key < data[j]:
-            if stop_flag: return
+            if stop_flag:
+                return
             comparisons += 1
             data[j + 1] = data[j]
             draw_bars(data, ["#f39c12" if x == j or x == j+1 else "#bdc3c7" for x in range(len(data))])
@@ -81,7 +83,8 @@ def selection_sort(data):
     for i in range(n):
         min_idx = i
         for j in range(i + 1, n):
-            if stop_flag: return
+            if stop_flag:
+                return
             comparisons += 1
             draw_bars(data, ["#f39c12" if x == j or x == min_idx else "#bdc3c7" for x in range(n)])
             if data[j] < data[min_idx]:
@@ -105,7 +108,8 @@ def merge(data, left, mid, right, draw, delay, stats):
     i, j = left, mid + 1
     while i <= mid and j <= right:
         stats['comparisons'] += 1
-        if stop_flag: return
+        if stop_flag:
+            return
         if data[i] < data[j]:
             merged.append(data[i])
             i += 1
@@ -119,7 +123,8 @@ def merge(data, left, mid, right, draw, delay, stats):
         merged.append(data[j])
         j += 1
     for i, val in enumerate(merged):
-        if stop_flag: return
+        if stop_flag:
+            return
         data[left + i] = val
         draw(data, ["#f39c12" if x == left + i else "#bdc3c7" for x in range(len(data))])
         time.sleep(delay)
@@ -135,7 +140,8 @@ def partition(data, low, high, draw, delay, stats):
     i = low - 1
     for j in range(low, high):
         stats['comparisons'] += 1
-        if stop_flag: return high
+        if stop_flag:
+            return high
         draw(data, ["#f39c12" if x == j or x == high else "#bdc3c7" for x in range(len(data))])
         time.sleep(delay)
         if data[j] < pivot:
@@ -145,6 +151,37 @@ def partition(data, low, high, draw, delay, stats):
     data[i + 1], data[high] = data[high], data[i + 1]
     stats['swaps'] += 1
     return i + 1
+
+# ==== Heap Sort ====
+def heapify(data, n, i):
+    largest = i
+    left = 2 * i + 1  # Left child
+    right = 2 * i + 2  # Right child
+
+    if left < n and data[largest] < data[left]:
+        largest = left
+
+    if right < n and data[largest] < data[right]:
+        largest = right
+
+    if largest != i:
+        data[i], data[largest] = data[largest], data[i]
+        heapify(data, n, largest)
+
+def heap_sort(data):
+    global stop_flag
+    swaps = 0
+    n = len(data)
+    
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(data, n, i)
+
+    for i in range(n - 1, 0, -1):
+        data[i], data[0] = data[0], data[i]
+        swaps += 1
+        heapify(data, i, 0)
+    
+    return data
 
 # ==== Generate Lists ====
 def generate_list(type_):
@@ -180,6 +217,8 @@ def start_sort():
         merge_sort(temp_data, 0, len(temp_data) - 1, draw_bars, speed.get(), stats)
     elif algo == "Quick Sort":
         quick_sort(temp_data, 0, len(temp_data) - 1, draw_bars, speed.get(), stats)
+    elif algo == "Heap Sort":
+        heap_sort(temp_data)
 
     end = time.time()
     draw_bars(temp_data, ["#27ae60"] * len(temp_data))
@@ -200,7 +239,7 @@ controls_frame.pack()
 
 algo_choice = tk.StringVar()
 algo_menu = ttk.Combobox(controls_frame, textvariable=algo_choice, state="readonly")
-algo_menu['values'] = ("Bubble Sort", "Insertion Sort", "Selection Sort", "Merge Sort", "Quick Sort")
+algo_menu['values'] = ("Bubble Sort", "Insertion Sort", "Selection Sort", "Merge Sort", "Quick Sort", "Heap Sort")
 algo_menu.set("Choose Algorithm")
 algo_menu.pack(side=tk.LEFT, padx=10)
 
@@ -227,3 +266,4 @@ stats_label.pack(pady=5)
 
 # ==== Mainloop ====
 root.mainloop()
+

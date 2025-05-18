@@ -6,10 +6,11 @@ import time
 # === Global Variables ===
 data = []
 stop_flag = False
+comparisons = 0  # Track comparisons for linear and binary search
 
 # === Binary Search Algorithm with Visualization ===
 def binary_search_visual(array, target):
-    global stop_flag
+    global stop_flag, comparisons
     left, right = 0, len(array) - 1
 
     while left <= right and not stop_flag:
@@ -28,10 +29,11 @@ def binary_search_visual(array, target):
         time.sleep(0.6)
         window.update()
 
+        comparisons += 1  # Increment comparisons
         if array[mid] == target:
             color_array[mid] = "green"
             draw_bars(array, color_array)
-            messagebox.showinfo("Result", f"Found {target} at index {mid}")
+            messagebox.showinfo("Result", f"Found {target} at index {mid} after {comparisons} comparisons.")
             return
         elif array[mid] < target:
             left = mid + 1
@@ -39,7 +41,27 @@ def binary_search_visual(array, target):
             right = mid - 1
 
     draw_bars(array, ["red"] * len(array))
-    messagebox.showinfo("Result", f"{target} not found.")
+    messagebox.showinfo("Result", f"{target} not found after {comparisons} comparisons.")
+
+# === Linear Search Algorithm with Visualization ===
+def linear_search(array, target):
+    global comparisons
+    comparisons = 0
+    for index, value in enumerate(array):
+        comparisons += 1
+        color_array = ["lightgray" for _ in range(len(array))]
+        color_array[index] = "yellow"
+        draw_bars(array, color_array)
+        time.sleep(0.6)
+        window.update()
+        
+        if value == target:
+            color_array[index] = "green"
+            draw_bars(array, color_array)
+            messagebox.showinfo("Result", f"Found {target} at index {index} after {comparisons} comparisons.")
+            return
+    draw_bars(array, ["red"] * len(array))
+    messagebox.showinfo("Result", f"{target} not found after {comparisons} comparisons.")
 
 # === Draw Bars ===
 def draw_bars(array, color_array):
@@ -72,7 +94,10 @@ def start_search():
         return
     try:
         target = int(entry.get())
-        binary_search_visual(data, target)
+        if algo_choice.get() == "Binary Search":
+            binary_search_visual(data, target)
+        elif algo_choice.get() == "Linear Search":
+            linear_search(data, target)
     except ValueError:
         messagebox.showerror("Invalid Input", "Please enter a valid integer.")
 
@@ -83,7 +108,7 @@ def stop_search():
 
 # === GUI Setup ===
 window = tk.Tk()
-window.title("Binary Search Visualizer")
+window.title("Search Visualizer")
 window.geometry("900x500")
 window.config(bg="#1e1e2f")
 
@@ -96,6 +121,13 @@ controls.pack()
 entry = tk.Entry(controls, width=10, font=("Segoe UI", 12))
 entry.pack(side=tk.LEFT, padx=10)
 
+# === Dropdown for Algorithm Selection ===
+algo_choice = tk.StringVar()
+algo_menu = tk.Combobox(controls, textvariable=algo_choice, state="readonly")
+algo_menu['values'] = ("Binary Search", "Linear Search")
+algo_menu.set("Choose Algorithm")
+algo_menu.pack(side=tk.LEFT, padx=10)
+
 tk.Button(controls, text="Generate Sorted List", command=generate_list,
           bg="#0984e3", fg="white", font=("Segoe UI", 10, "bold"), bd=0).pack(side=tk.LEFT, padx=5)
 
@@ -106,3 +138,4 @@ tk.Button(controls, text="⏹ Stop", command=stop_search,
           bg="#d63031", fg="white", font=("Segoe UI", 10, "bold"), bd=0).pack(side=tk.LEFT, padx=5)
 
 window.mainloop()
+
